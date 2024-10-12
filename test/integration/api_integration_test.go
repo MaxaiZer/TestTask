@@ -13,7 +13,7 @@ import (
 func Test_CreateTokens_WhenUserExists_ShouldReturn200(t *testing.T) {
 
 	gin := setupRoutesForTests()
-	req, _ := http.NewRequest("GET", "/auth/tokens?user_id=1", nil)
+	req, _ := http.NewRequest("POST", "/auth/tokens?user_id=1", nil)
 	w := httptest.NewRecorder()
 
 	gin.ServeHTTP(w, req)
@@ -24,7 +24,7 @@ func Test_CreateTokens_WhenUserExists_ShouldReturn200(t *testing.T) {
 func Test_CreateTokens_WhenUserDoesntExists_ShouldReturn400(t *testing.T) {
 
 	gin := setupRoutesForTests()
-	req, _ := http.NewRequest("GET", "/auth/tokens?user_id=15", nil)
+	req, _ := http.NewRequest("POST", "/auth/tokens?user_id=15", nil)
 	w := httptest.NewRecorder()
 
 	gin.ServeHTTP(w, req)
@@ -42,7 +42,7 @@ func Test_RefreshTokens_WhenInvalidTokens_ShouldReturn400(t *testing.T) {
 	}
 	body, _ := json.Marshal(tokenPair)
 
-	req, _ := http.NewRequest("GET", "/auth/refresh", bytes.NewBuffer(body))
+	req, _ := http.NewRequest("POST", "/auth/refresh", bytes.NewBuffer(body))
 	w := httptest.NewRecorder()
 
 	gin.ServeHTTP(w, req)
@@ -54,11 +54,11 @@ func Test_RefreshTokens_WhenValidTokens_ShouldReturn200(t *testing.T) {
 
 	gin := setupRoutesForTests()
 
-	req, _ := http.NewRequest("GET", "/auth/tokens?user_id=1", nil)
+	req, _ := http.NewRequest("POST", "/auth/tokens?user_id=1", nil)
 	w := httptest.NewRecorder()
 	gin.ServeHTTP(w, req)
 
-	req, _ = http.NewRequest("GET", "/auth/refresh", w.Body)
+	req, _ = http.NewRequest("POST", "/auth/refresh", w.Body)
 	gin.ServeHTTP(w, req)
 
 	assert.Equal(t, w.Code, http.StatusOK)
@@ -68,19 +68,19 @@ func Test_RefreshTokens_WhenAlreadyUsedRefreshToken_ShouldReturn400(t *testing.T
 
 	gin := setupRoutesForTests()
 
-	req, _ := http.NewRequest("GET", "/auth/tokens?user_id=1", nil)
+	req, _ := http.NewRequest("POST", "/auth/tokens?user_id=1", nil)
 	w := httptest.NewRecorder()
 	gin.ServeHTTP(w, req)
 
 	bodyBytes := w.Body.Bytes()
 
-	req, _ = http.NewRequest("GET", "/auth/refresh", bytes.NewBuffer(bodyBytes))
+	req, _ = http.NewRequest("POST", "/auth/refresh", bytes.NewBuffer(bodyBytes))
 	w = httptest.NewRecorder()
 	gin.ServeHTTP(w, req)
 
 	assert.Equal(t, w.Code, http.StatusOK)
 
-	req, _ = http.NewRequest("GET", "/auth/refresh", bytes.NewBuffer(bodyBytes))
+	req, _ = http.NewRequest("POST", "/auth/refresh", bytes.NewBuffer(bodyBytes))
 	w = httptest.NewRecorder()
 	gin.ServeHTTP(w, req)
 

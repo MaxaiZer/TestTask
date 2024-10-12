@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      #MODE: debug
+      MODE: debug
       DB_CONNECTION_STRING: "host=db port=5432 dbname=${POSTGRES_DB} user=${POSTGRES_USER} password=${POSTGRES_PASSWORD}"
     depends_on:
       db:

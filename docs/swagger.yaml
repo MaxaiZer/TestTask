@@ -1,0 +1,81 @@
+basePath: /
+definitions:
+  dto.TokenPair:
+    properties:
+      accessToken:
+        type: string
+      refreshToken:
+        type: string
+    type: object
+  errors.PublicError:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Already created users with id 1 and 2
+  title: TestTask API
+  version: "1.0"
+paths:
+  /auth/refresh:
+    post:
+      consumes:
+      - application/json
+      description: Refreshes tokens based on the provided token pair
+      parameters:
+      - description: Access and refresh tokens
+        in: body
+        name: pair
+        required: true
+        schema:
+          $ref: '#/definitions/dto.TokenPair'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TokenPair'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.PublicError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errors.PublicError'
+      summary: Refresh tokens
+      tags:
+      - Auth
+  /auth/tokens:
+    post:
+      consumes:
+      - application/json
+      description: Creates new tokens for a user based on the user_id query parameter
+      parameters:
+      - description: User ID
+        in: query
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TokenPair'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.PublicError'
+      summary: Create new tokens
+      tags:
+      - Auth
+schemes:
+- http
+swagger: "2.0"

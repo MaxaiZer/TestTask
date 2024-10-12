@@ -12,10 +12,19 @@ import (
 )
 
 func Register(e *gin.Engine) {
-	e.GET("/auth/tokens", createTokens)
-	e.GET("/auth/refresh", refreshTokens)
+	e.POST("/auth/tokens", createTokens)
+	e.POST("/auth/refresh", refreshTokens)
 }
 
+// @Summary Create new tokens
+// @Description Creates new tokens for a user based on the user_id query parameter
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param user_id query string true "User ID"
+// @Success 200 {object} dto.TokenPair
+// @Failure 400 {object} errors.PublicError
+// @Router /auth/tokens [post]
 func createTokens(c *gin.Context) {
 
 	userID := c.Query("user_id")
@@ -42,6 +51,16 @@ func createTokens(c *gin.Context) {
 	c.JSON(http.StatusOK, tokens)
 }
 
+// @Summary Refresh tokens
+// @Description Refreshes tokens based on the provided token pair
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param pair body dto.TokenPair true "Access and refresh tokens"
+// @Success 200 {object} dto.TokenPair
+// @Failure 400 {object} errors.PublicError
+// @Failure 401 {object} errors.PublicError
+// @Router /auth/refresh [post]
 func refreshTokens(c *gin.Context) {
 
 	var pair dto.TokenPair
