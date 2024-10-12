@@ -84,7 +84,5 @@ func loadConfig(file string) (*Config, error) {
 		return nil, fmt.Errorf("missing or empty required fields in config: %s", fieldsStr)
 	}
 
-	log.Printf("Using config file:", config)
-
 	return &config, nil
 }
