@@ -38,14 +38,6 @@ type fullClaims struct {
 
 func NewJwtService(cfg *config.JWTConfig) (*JwtService, error) {
 
-	if cfg.AccessLifetime <= 0 {
-		return nil, fmt.Errorf("invalid Jwt AccessLifetime: %d", cfg.AccessLifetime)
-	}
-
-	if cfg.RefreshLifetime <= 0 {
-		return nil, fmt.Errorf("invalid Jwt RefreshLifetime: %d", cfg.RefreshLifetime)
-	}
-
 	return &JwtService{
 		secretKey:          cfg.SecretKey,
 		signingMethod:      jwt.SigningMethodHS512,

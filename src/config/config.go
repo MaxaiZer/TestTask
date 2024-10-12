@@ -62,27 +62,53 @@ func loadConfig(file string) (*Config, error) {
 		return nil, err
 	}
 
-	requiredFields := []string{
-		"jwt.secret_key",
-		"db.connection_string",
-		"jwt.access_lifetime",
-		"jwt.refresh_lifetime",
-		"jwt.issuer",
-		"jwt.audience",
+	err := config.DB.Validate()
+	if err != nil {
+		return nil, err
 	}
 
-	var missingFields []string
-
-	for _, field := range requiredFields {
-		if !viper.IsSet(field) || viper.GetString(field) == "" {
-			missingFields = append(missingFields, field)
-		}
-	}
-
-	if len(missingFields) > 0 {
-		var fieldsStr = strings.Join(missingFields, ", ")
-		return nil, fmt.Errorf("missing or empty required fields in config: %s", fieldsStr)
+	err = config.JWT.Validate()
+	if err != nil {
+		return nil, err
 	}
 
 	return &config, nil
+}
+
+func (config DBConfig) Validate() error {
+	if config.ConnectionString == "" {
+		return fmt.Errorf("missing variable: db connection string")
+	}
+	return nil
+}
+
+func (config JWTConfig) Validate() error {
+
+	var missingFields []string
+
+	if config.SecretKey == "" {
+		missingFields = append(missingFields, "secret key")
+	}
+
+	if config.Issuer == "" {
+		missingFields = append(missingFields, "issuer")
+	}
+
+	if config.Audience == "" {
+		missingFields = append(missingFields, "audience")
+	}
+
+	if len(missingFields) > 0 {
+		return fmt.Errorf("missing required variables: %s", strings.Join(missingFields, ", "))
+	}
+
+	if config.AccessLifetime <= 0 {
+		return fmt.Errorf("invalid access lifetime: must be greater than 0")
+	}
+
+	if config.RefreshLifetime <= 0 {
+		return fmt.Errorf("invalid refresh lifetime: must be greater than 0")
+	}
+
+	return nil
 }
