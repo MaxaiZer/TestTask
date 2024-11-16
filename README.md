@@ -1,5 +1,5 @@
 # TestTask
 
 ## Запуск
-- создать .env (см. env.sample)
+- создать файл .env (см. env.sample)
 - docker compose up --build
