@@ -1,0 +1,13 @@
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+CREATE TABLE wallets (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    balance FLOAT NOT NULL DEFAULT 0.0
+);
+
+
+ALTER TABLE wallets ADD CONSTRAINT check_balance_non_negative CHECK (balance >= 0);
+
+INSERT INTO wallets (id, balance) VALUES
+('11111111-1111-1111-1111-111111111111', 555.5),
+('22222222-2222-2222-2222-222222222222', 555.5);
