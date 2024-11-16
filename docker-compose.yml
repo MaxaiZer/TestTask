@@ -3,8 +3,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    #environment:
-      #DB_CONNECTION_STRING: "host=db port=5432 dbname=${POSTGRES_DB} user=${POSTGRES_USER} password=${POSTGRES_PASSWORD} sslmode=${SSL_MODE}"
+    environment:
+      DB_CONNECTION_STRING: "host=db port=5432 dbname=${POSTGRES_DB} user=${POSTGRES_USER} password=${POSTGRES_PASSWORD} sslmode=${SSL_MODE}"
     depends_on:
       db:
         condition: service_healthy
