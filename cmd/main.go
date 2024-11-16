@@ -20,6 +20,7 @@ func main() {
 		log.Fatalf("error create dbContext: %v", err)
 		return
 	}
+	defer dbContext.Close()
 
 	err = dbContext.Migrate()
 	if err != nil {
