@@ -35,7 +35,7 @@ func (h *WalletHandler) GetBalance(ctx *gin.Context) {
 		return
 	}
 
-	balance, err := h.service.GetBalance(context.Background(), walletID)
+	balance, err := h.service.GetBalance(ctx, walletID)
 	if err != nil {
 		_ = ctx.Error(err)
 		return
@@ -58,7 +58,7 @@ func (h *WalletHandler) RunOperation(ctx *gin.Context) {
 		return
 	}
 
-	err = h.service.RunOperation(context.Background(), *op)
+	err = h.service.RunOperation(ctx, *op)
 	if err != nil {
 		_ = ctx.Error(err)
 		return
